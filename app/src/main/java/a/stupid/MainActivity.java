@@ -50,6 +50,7 @@ public class MainActivity extends Activity {
             //Draw a box using Canvas method
             Point p3 = new Point(50,50);
             Point p4 = new Point(200,200);
+            paint.setStyle(Paint.Style.STROKE);
             canvas.drawRect(p3.x, p3.y, p4.x, p4.y, paint);
         }
 
