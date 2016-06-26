@@ -7,19 +7,28 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+
 import java.util.Random;
 
 public class MainActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setTitle("Create Canvas Demo");
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(new DrawView(this));
     }
-     public class DrawView extends View {
-         public DrawView(Context context) {
-             super(context);
+
+    public class DrawView extends View {
+        DisplayMetrics dm;
+        public DrawView(Context context) {
+            super(context);
+            dm = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(dm);
          }
 
         @Override
@@ -30,8 +39,29 @@ public class MainActivity extends Activity {
             Paint paint = new Paint();
             Random random = new Random();
             paint.setAntiAlias(true);
+            paint.setTextSize(30f);
             canvas.drawColor(Color.WHITE);
 
+            // Get canvas resolution
+            int width = canvas.getWidth();
+            int height = canvas.getHeight();
+
+            // Print out screen details
+            int x=10, y=30, step=36;
+            canvas.drawText("Density: " + dm.density, x, y, paint);
+            y += step;
+            canvas.drawText("Scaled density: " + dm.scaledDensity, x, y, paint);
+            y += step;
+            canvas.drawText("Width " + width, x, y, paint); y += step;
+            canvas.drawText("Height " + height, x, y, paint); y += step;
+            canvas.drawText("X dpi: " + dm.xdpi, x, y, paint); y += step;
+            canvas.drawText("Y dpi: " + dm.ydpi, x, y, paint);
+
+            drawStuff(canvas, paint, random);
+
+        } //onDraw()
+
+        public void drawStuff(Canvas canvas, Paint paint, Random random) {
             // Draw some circles with random colors in random locations
             for (int i = 0; i < 20; i++) {
                 paint.setColor(random.nextInt());
@@ -52,7 +82,7 @@ public class MainActivity extends Activity {
             Point p4 = new Point(200,200);
             paint.setStyle(Paint.Style.STROKE);
             canvas.drawRect(p3.x, p3.y, p4.x, p4.y, paint);
-        }
+        } //drawStuff()
 
          // Method for drawing box (superfluous b/c drawRect is already a method in Canvas)
         public void drawBox(Canvas canvas, Point p1, Point p2, Paint paint) {
