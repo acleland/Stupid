@@ -1,6 +1,5 @@
 package a.stupid;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -20,28 +19,63 @@ public class MainActivity extends Activity {
     }
 
     public class DrawView extends View {
-        DisplayMetrics dm;
+        Bitmap bufferBitmap;
+        Canvas bufferCanvas;
+        Point screenSize;
+        Random rand = new Random();
+
+
         public DrawView(Context context) {
             super(context);
-            dm = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+            // Get the screen size before the main canvas is ready
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            screenSize = new Point(metrics.widthPixels-20, metrics.heightPixels-20);
+
+            // Create the back buffer
+            bufferBitmap = Bitmap.createBitmap(screenSize.x, screenSize.y, Bitmap.Config.ARGB_8888);
+            bufferCanvas = new Canvas(bufferBitmap);
          }
+
 
         @Override
         public void onDraw(Canvas canvas) {
             super.onDraw(canvas);
 
-            // Fill the screen with white
-            Paint paint = new Paint();
-            Random random = new Random();
-            paint.setAntiAlias(true);
-            paint.setTextSize(30f);
-            canvas.drawColor(Color.WHITE);
+            // Fill the back buffer with graphics
+            drawOnBuffer();
 
-            drawStuff(canvas, paint, random);
-            displayMetricsDemo(canvas, paint, dm);
+            // copy the back buffer to the screen
+            canvas.drawBitmap(bufferBitmap, 0, 0, new Paint());
+
         } //onDraw()
 
+        public void drawOnBuffer() {
+            Paint paint = new Paint();
+            paint.setAntiAlias(true);
+
+            // Clear the buffer with color
+            bufferCanvas.drawColor(Color.WHITE );
+
+            // Draw random circles
+            for (int n=0; n<500; n++) {
+                // Make random color
+                int r = rand.nextInt(256);
+                int g = rand.nextInt(256);
+                int b = rand.nextInt(256);
+                paint.setColor(Color.rgb(r, g, b));
+
+                // Make a random position and radius
+                int x = rand.nextInt(bufferCanvas.getWidth());
+                int y = rand.nextInt(bufferCanvas.getHeight());
+                int radius = rand.nextInt(100) +20;
+
+                // Draw one circle
+                bufferCanvas.drawCircle(x, y, radius, paint);
+
+            }
+        }
         public void displayMetricsDemo(Canvas canvas, Paint paint, DisplayMetrics dm) {
             // Get canvas resolution
             int width = canvas.getWidth();
