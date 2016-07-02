@@ -1,17 +1,13 @@
 package a.stupid;
 
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
+import android.graphics.*;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-
+import android.util.*;
+import android.view.*;
 import java.util.Random;
 
 public class MainActivity extends Activity {
@@ -19,7 +15,7 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(new DrawView(this));
     }
 
@@ -42,24 +38,32 @@ public class MainActivity extends Activity {
             paint.setTextSize(30f);
             canvas.drawColor(Color.WHITE);
 
+            drawStuff(canvas, paint, random);
+            displayMetricsDemo(canvas, paint, dm);
+        } //onDraw()
+
+        public void displayMetricsDemo(Canvas canvas, Paint paint, DisplayMetrics dm) {
             // Get canvas resolution
             int width = canvas.getWidth();
             int height = canvas.getHeight();
 
             // Print out screen details
-            int x=10, y=30, step=36;
+            int x = 10, y = 30, step = 36;
             canvas.drawText("Density: " + dm.density, x, y, paint);
             y += step;
             canvas.drawText("Scaled density: " + dm.scaledDensity, x, y, paint);
             y += step;
-            canvas.drawText("Width " + width, x, y, paint); y += step;
-            canvas.drawText("Height " + height, x, y, paint); y += step;
-            canvas.drawText("X dpi: " + dm.xdpi, x, y, paint); y += step;
+            canvas.drawText("Width " + width, x, y, paint);
+            y += step;
+            canvas.drawText("Height " + height, x, y, paint);
+            y += step;
+            canvas.drawText("X dpi: " + dm.xdpi, x, y, paint);
+            y += step;
             canvas.drawText("Y dpi: " + dm.ydpi, x, y, paint);
 
-            drawStuff(canvas, paint, random);
+        } // displayMetricsDemo()
 
-        } //onDraw()
+
 
         public void drawStuff(Canvas canvas, Paint paint, Random random) {
             // Draw some circles with random colors in random locations
@@ -90,6 +94,11 @@ public class MainActivity extends Activity {
             canvas.drawLine(p1.x, p1.y, p2.x, p1.y, paint);
             canvas.drawLine(p1.x, p2.y, p2.x, p2.y, paint);
             canvas.drawLine(p2.x, p1.y, p2.x, p2.y, paint);
+        }
+
+        // Method for bitmap demo
+        public void bitmapStuff() {
+
         }
      } //DrawView
 } //MainActivity
